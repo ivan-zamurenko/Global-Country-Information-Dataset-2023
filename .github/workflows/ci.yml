@@ -1,0 +1,30 @@
+name: Data Analysis CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Conda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        environment-file: environment.yml
+        activate-environment: global-country-data
+    
+    - name: Validate data
+      shell: bash -l {0}
+      run: |
+        python -c "import pandas as pd; df = pd.read_csv('data/raw/world-data-2023.csv'); assert len(df) >= 190; print('✓ Data validation passed')"
+    
+    - name: Run analysis
+      shell: bash -l {0}
+      run: |
+        python analysis/main.py
