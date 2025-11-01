@@ -1,0 +1,37 @@
+Column,Data_Type,Missing_Count,Missing_Percent
+Country,object,0,0.00%
+"Density
+(P/Km2)",object,0,0.00%
+Abbreviation,object,7,3.59%
+Agricultural Land( %),object,7,3.59%
+Land Area(Km2),object,1,0.51%
+Armed Forces size,object,24,12.31%
+Birth Rate,float64,6,3.08%
+Calling Code,float64,1,0.51%
+Capital/Major City,object,3,1.54%
+Co2-Emissions,object,7,3.59%
+CPI,object,17,8.72%
+CPI Change (%),object,16,8.21%
+Currency-Code,object,15,7.69%
+Fertility Rate,float64,7,3.59%
+Forested Area (%),object,7,3.59%
+Gasoline Price,object,20,10.26%
+GDP,object,2,1.03%
+Gross primary education enrollment (%),object,7,3.59%
+Gross tertiary education enrollment (%),object,12,6.15%
+Infant mortality,float64,6,3.08%
+Largest city,object,6,3.08%
+Life expectancy,float64,8,4.10%
+Maternal mortality ratio,float64,14,7.18%
+Minimum wage,object,45,23.08%
+Official language,object,5,2.56%
+Out of pocket health expenditure,object,7,3.59%
+Physicians per thousand,float64,7,3.59%
+Population,object,1,0.51%
+Population: Labor force participation (%),object,19,9.74%
+Tax revenue (%),object,26,13.33%
+Total tax rate,object,12,6.15%
+Unemployment rate,object,19,9.74%
+Urban_population,object,5,2.56%
+Latitude,float64,1,0.51%
+Longitude,float64,1,0.51%
