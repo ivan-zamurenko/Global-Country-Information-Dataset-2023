@@ -1,7 +1,10 @@
 import pandas as pd
 from pathlib import Path
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
-from analysis.data_quality_report import DataQualityReport
+from analysis.data_pipeline import DataPipeLine
 
 """
 Global Country Information Dataset 2023 - Main Analysis Module
@@ -22,12 +25,12 @@ def main():
     DATA_CLEANED.mkdir(parents=True, exist_ok=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    #! Task 1: Data Cleaning
-    dq_report = DataQualityReport(
-        input_path=DATA_RAW / "world-data-2023.csv",
-        output_path=RESULTS_DIR / "data_quality_report.txt",
+    #! Task 1: Setup the data pipeline
+    pipeline = DataPipeLine(
+        input_path=DATA_RAW,
+        output_path=RESULTS_DIR,
     )
-    dq_report.run()
+    pipeline.run()
 
 
 if __name__ == "__main__":

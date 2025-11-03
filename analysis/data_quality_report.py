@@ -1,6 +1,10 @@
 import pandas as pd
 from datetime import datetime
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
 
 class DataQualityReport:
     """Class cleaning and reporting on data quality issues."""
@@ -22,7 +26,7 @@ class DataQualityReport:
 
     def examine_structure(self):
         """Examine dataset structure and report findings."""
-        self.cleaned_df = self.data.copy()
+        self.df = self.data.copy()
 
         with open(self.output_path, "w") as f:
             f.write("🌍 GLOBAL COUNTRY DATASET 2023 - INITIAL ASSESSMENT\n")
@@ -36,46 +40,47 @@ class DataQualityReport:
             # ! Basic Facts
             f.write("\n📊 BASIC DATASET INFO\n")
             f.write("-" * 30 + "\n")
-            f.write(f"Countries: {self.cleaned_df.shape[0]} records\n")
-            f.write(f"Indicators: {self.cleaned_df.shape[1]} features\n")
-            f.write(
-                f"Data points: {self.cleaned_df.shape[0] * self.cleaned_df.shape[1]} total\n"
-            )
+            f.write(f"Countries: {self.df.shape[0]} records\n")
+            f.write(f"Indicators: {self.df.shape[1]} features\n")
+            f.write(f"Data points: {self.df.shape[0] * self.df.shape[1]} total\n")
 
             # ! Health check
             missing_ptc = (
-                self.cleaned_df.isnull().sum().sum()
-                / (self.cleaned_df.shape[0] * self.cleaned_df.shape[1])
+                self.df.isnull().sum().sum() / (self.df.shape[0] * self.df.shape[1])
             ) * 100
             f.write(
                 f"Completeness: {100 - missing_ptc:.2f}% ({missing_ptc:.2f}% missing)\n"
             )
-            missing_values = self.cleaned_df.isnull().sum()
+            missing_values = self.df.isnull().sum()
             for column, count in missing_values.items():
                 if count > 0:
                     f.write(f" ‼️ {column}: {count} missing values\n")
             if missing_values.sum() == 0:
                 f.write("✅ No missing values detected.\n")
 
+            #! Visualize missing values
+            self.bar_plot_missing_values()
+            self.heatmap_missing_values()
+
             # ! Content scan
             f.write("\n📋 CONTENT OVERVIEW\n")
             f.write("-" * 30 + "\n")
             f.write(
-                f"Text columns: {len(self.cleaned_df.select_dtypes(include=['object']).columns)}\n"
+                f"Text columns: {len(self.df.select_dtypes(include=['object']).columns)}\n"
             )
             f.write(
-                f"Numeric columns: {len(self.cleaned_df.select_dtypes(include=['number']).columns)}\n"
+                f"Numeric columns: {len(self.df.select_dtypes(include=['number']).columns)}\n"
             )
             f.write(
-                f"Date columns: {len(self.cleaned_df.select_dtypes(include=['datetime']).columns)}\n"
+                f"Date columns: {len(self.df.select_dtypes(include=['datetime']).columns)}\n"
             )
 
             # ! Data Format Issues
             f.write("\n🧹 DATA FORMAT ISSUES\n")
             f.write("-" * 30 + "\n")
             f.write(" Cleaning columns names to standard format...\n")
-            self.cleaned_df.columns = (
-                self.cleaned_df.columns.str.strip()
+            self.df.columns = (
+                self.df.columns.str.strip()
                 .str.lower()
                 .str.replace("%", "pct")
                 .str.replace(r"[ \n\(\)/\-]", "_", regex=True)
@@ -83,12 +88,12 @@ class DataQualityReport:
                 .str.rstrip("_")
             )
             f.write("✅ Columns cleaned. Now let's clean values...\n")
-            for col in self.cleaned_df.columns:
-                if self.cleaned_df[col].dtype == "object":
-                    if self.cleaned_df[col].str.contains(r"[%$]", regex=True).any():
+            for col in self.df.columns:
+                if self.df[col].dtype == "object":
+                    if self.df[col].str.contains(r"[%$]", regex=True).any():
                         f.write(f"  ❕ Cleaning format issues in column: {col}\n")
-                        self.cleaned_df[col] = (
-                            self.cleaned_df[col]
+                        self.df[col] = (
+                            self.df[col]
                             .str.replace(r"[$,]", "", regex=True)
                             .str.replace("%", "")
                             .astype(float)
@@ -100,8 +105,8 @@ class DataQualityReport:
             f.write("-" * 30 + "\n")
             f.write("Key columns preview:\n")
             key_cols = ["country", "abbreviation", "land_area_km2", "population"]
-            if all(col in self.cleaned_df.columns for col in key_cols):
-                f.write(f"{self.cleaned_df[key_cols].head(5)}\n")
+            if all(col in self.df.columns for col in key_cols):
+                f.write(f"{self.df[key_cols].head(5)}\n")
 
             # ! Recommendations
             f.write("\n💡 NEXT STEPS RECOMMENDATIONS\n")
@@ -132,8 +137,64 @@ class DataQualityReport:
             str(self.output_path).replace(".txt", "_summary.csv"), index=False
         )
 
+    #! Missing values plotting could be added here in future iterations
+    def bar_plot_missing_values(self):
+        """Plot missing values bar chart & heatmap."""
+        missing_values_pct = self.df.isnull().sum() / len(self.df)
+        present_values_pct = 1 - missing_values_pct
+
+        # Bar plot
+        plt.figure(figsize=(20, 12))
+        columns = self.df.columns
+        x = np.arange(len(columns))
+
+        # blue bar plot
+        plt.bar(x, present_values_pct, color="blue", label="Present Values %")
+
+        # red bar plot
+        plt.bar(x, missing_values_pct, color="red", label="Missing Values %")
+        plt.xticks(x, columns, rotation=90)
+        plt.ylim(0, 1)
+        plt.grid(axis="y", linestyle="--", alpha=0.7)
+        plt.ylabel("Proportion of data")
+        plt.title("Data Completeness")
+        plt.legend()
+        plt.tight_layout()
+
+        plt.savefig(
+            str(self.output_path).replace(".txt", "_missing_values_bar.png"),
+            bbox_inches="tight",
+        )
+
+        plt.show()
+
+    def heatmap_missing_values(self):
+        """Plot missing values heatmap"""
+        plt.figure(figsize=(20, 12))
+        sns.heatmap(
+            self.df.isnull(),
+            cmap="Reds",
+            cbar=True,
+            yticklabels=False,
+            linewidths=0.5,
+            linecolor="gray",
+            vmin=0,
+            vmax=1,
+        )
+        plt.title("Missing Values Heatmap", fontsize=18)
+        plt.xlabel("Features", fontsize=14)
+        plt.ylabel("Rows (samples)", fontsize=12)
+        plt.tight_layout()
+        plt.savefig(
+            str(self.output_path).replace(".txt", "_missing_values_heatmap.png"),
+            bbox_inches="tight",
+        )
+        plt.show()
+        pass
+
     def run(self):
         """Run the data quality report generation."""
         self.load_data()
         self.examine_structure()
         self.create_summary_table()
+        return self.df
