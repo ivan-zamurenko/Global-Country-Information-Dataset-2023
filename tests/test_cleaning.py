@@ -7,7 +7,8 @@ from analysis.data_pipeline import (
     remove_outliers,
     validate_data,
     KEY_COLUMNS,
-    QUANTILE_THRESHOLD,
+    QUANTILE_HIGH_THRESHOLD,
+    QUANTILE_LOW_THRESHOLD,
 )
 
 
@@ -43,7 +44,7 @@ def test_handle_missing_values():
     df = pd.DataFrame({"name": [None, " Alice "], "value": [None, 5]})
     df = handle_missing_values(df)
     assert df["name"].tolist() == ["Unknown", "Alice"]
-    assert df["value"].tolist() == [-1, 5]
+    assert pd.isna(df["value"][0]) and df["value"][1] == 5
 
 
 def test_remove_outliers():
@@ -51,9 +52,12 @@ def test_remove_outliers():
     Test outlier removal:
         - Values above quantile threshold set to -1
     """
-    df = pd.DataFrame({"population": [1, 2, 1000, 3, 4]})
-    df = remove_outliers(df, ["population"], 0.8)
-    assert (df["population"] == -1).sum() == 1
+    df = pd.DataFrame({"population": [1, 2, 1000, 3, 4, -1000]})
+    df = remove_outliers(
+        df, ["population"], QUANTILE_HIGH_THRESHOLD, QUANTILE_LOW_THRESHOLD
+    )
+    # Outliers (above high quantile and below low quantile) set to NaN
+    assert pd.isna(df["population"]).sum() == 2
 
 
 def test_validate_data():
@@ -63,4 +67,9 @@ def test_validate_data():
     """
     df = pd.DataFrame({"population": [1, -5, "bad", 10]})
     df = validate_data(df, ["population"])
-    assert df["population"].tolist() == [1, -1, -1, 10]
+    # Non-numeric and negative values set to NaN
+    result = df["population"].tolist()
+    assert result[0] == 1
+    assert pd.isna(result[1])
+    assert pd.isna(result[2])
+    assert result[3] == 10

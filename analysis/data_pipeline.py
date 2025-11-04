@@ -16,7 +16,8 @@ REPORT_PATH = (
 PLOT_PATH = "results/task-a/plots/"  # Directory for plots
 CLEANED_PATH = "data/cleaned/world_data_2023_cleaned.csv"  # Output for cleaned data
 
-QUANTILE_THRESHOLD = 0.95  # Outlier threshold (upper quantile)
+QUANTILE_HIGH_THRESHOLD = 0.90  # Outlier threshold (upper quantile)
+QUANTILE_LOW_THRESHOLD = 0.05  # Outlier threshold (lower quantile)
 
 # Columns most critical for analysis and cleaning
 KEY_COLUMNS = [
@@ -81,8 +82,10 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = format_column_names(df)
     df = format_row_values(df)
-    df = handle_missing_values(df)
-    df = remove_outliers(df, KEY_COLUMNS, QUANTILE_THRESHOLD)
+    # df = handle_missing_values(df)
+    df = remove_outliers(
+        df, KEY_COLUMNS, QUANTILE_HIGH_THRESHOLD, QUANTILE_LOW_THRESHOLD
+    )
     df = validate_data(df, KEY_COLUMNS)
     log_action(" ✔︎ Data cleaning completed")
     return df
@@ -107,6 +110,7 @@ def format_column_names(df: pd.DataFrame) -> pd.DataFrame:
         .str.lstrip("_")  # Remove leading underscores
         .str.strip("_")  # Strip underscores
         .str.strip()
+        .str.lstrip()
         .str.lower()  # Lowercase
     )
     log_action(" ✔︎ Formatted column names")
@@ -139,22 +143,26 @@ def handle_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     for column in df.columns:
         if df[column].dtype == object:
             df[column] = df[column].fillna("Unknown").str.strip()
-        else:
-            df[column] = df[column].fillna(-1)
+        # For numeric columns, leave missing values as NaN (do nothing)
     log_action(" ✔︎ Handled missing values")
     return df
 
 
 def remove_outliers(
-    df: pd.DataFrame, key_columns: list, quantile_threshold: float
+    df: pd.DataFrame,
+    key_columns: list,
+    quantile_high_threshold: float,
+    quantile_low_threshold: float,
 ) -> pd.DataFrame:
     """
     For each key column, set values above the quantile threshold to -1 (mark as outlier).
     """
     for col in key_columns:
         if col in df.columns:
-            upper_limit = df[col].quantile(quantile_threshold)
-            df.loc[df[col] > upper_limit, col] = -1
+            upper_limit = df[col].quantile(quantile_high_threshold)
+            lower_limit = df[col].quantile(quantile_low_threshold)
+            df.loc[df[col] > upper_limit, col] = pd.NA
+            df.loc[df[col] < lower_limit, col] = pd.NA
     log_action(" ✔︎ Removed outliers")
     return df
 
@@ -169,8 +177,8 @@ def validate_data(df: pd.DataFrame, key_columns: list) -> pd.DataFrame:
     for col in key_columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
-            df[col] = df[col].fillna(-1)
-            df.loc[df[col] < 0, col] = -1
+            # Do not fillna(-1); keep missing values as NaN
+            df.loc[df[col] < 0, col] = pd.NA
     log_action(" ✔︎ Data validation completed")
     return df
 
