@@ -30,4 +30,6 @@ jobs:
         python main.py
 
     - name: Run tests
-      run: python3 -m pytest tests/
+      shell: bash -l {0}
+      run: |
+        pytest tests/
