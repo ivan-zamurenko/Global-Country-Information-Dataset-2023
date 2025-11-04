@@ -44,18 +44,28 @@ def run_pipeline():
         4. Save cleaned data to output
     """
     # 1. Data Quality Assessment
-    dq_report = DataQualityReport(RAW_PATH, REPORT_PATH, PLOT_PATH)
-    dq_report.run()
-    df = dq_report.data
+    try:
+        dq_report = DataQualityReport(RAW_PATH, REPORT_PATH, PLOT_PATH)
+        dq_report.run()
+        df = dq_report.data
+        log_action(" ✔︎ Data quality report generated")
+    except Exception as e:
+        log_action(f" ✘ Data quality report generation failed: {e}")
+        return
 
     # 2. Data Cleaning (calls modular cleaning functions below)
-    df_cleaned = clean_data(df)
+    try:
+        df_cleaned = clean_data(df)
+    except Exception as e:
+        log_action(f" ✘ Data cleaning failed: {e}")
+        return
 
     # 3. Feature Engineering (currently a placeholder)
     df_featured = df_cleaned.copy()
 
     # 4. Save cleaned data
-    df_featured.to_csv(CLEANED_PATH, index=False)
+    # df_featured.to_csv(CLEANED_PATH, index=False)
+    save_cleaned_data(df_cleaned, CLEANED_PATH)
     print(f"Pipeline complete! Cleaned data saved to {CLEANED_PATH}")
 
 
@@ -74,6 +84,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df = handle_missing_values(df)
     df = remove_outliers(df, KEY_COLUMNS, QUANTILE_THRESHOLD)
     df = validate_data(df, KEY_COLUMNS)
+    log_action(" ✔︎ Data cleaning completed")
     return df
 
 
@@ -89,13 +100,14 @@ def format_column_names(df: pd.DataFrame) -> pd.DataFrame:
     """
     df.columns = (
         df.columns.str.replace(r"[()\-/\$]", "_", regex=True)  # Replace symbols
-        .str.replace(r"_+", "_", regex=True)  # Collapse underscores
         .str.lstrip("_")  # Remove leading underscores
         .str.replace("%", "pct")  # Replace percent sign
         .str.replace(" ", "_")  # Replace spaces
+        .str.replace(r"_+", "_", regex=True)  # Collapse underscores
         .str.strip()  # Strip whitespace
         .str.lower()  # Lowercase
     )
+    log_action(" ✔︎ Formatted column names")
     return df
 
 
@@ -112,6 +124,7 @@ def format_row_values(df: pd.DataFrame) -> pd.DataFrame:
         # If at least 80% of the values are numeric, convert column
         if converted.notna().sum() >= 0.8 * len(df):
             df[column] = converted
+    log_action(" ✔︎ Formatted row values")
     return df
 
 
@@ -126,6 +139,7 @@ def handle_missing_values(df: pd.DataFrame) -> pd.DataFrame:
             df[column] = df[column].fillna("Unknown").str.strip()
         else:
             df[column] = df[column].fillna(-1)
+    log_action(" ✔︎ Handled missing values")
     return df
 
 
@@ -139,6 +153,7 @@ def remove_outliers(
         if col in df.columns:
             upper_limit = df[col].quantile(quantile_threshold)
             df.loc[df[col] > upper_limit, col] = -1
+    log_action(" ✔︎ Removed outliers")
     return df
 
 
@@ -154,6 +169,7 @@ def validate_data(df: pd.DataFrame, key_columns: list) -> pd.DataFrame:
             df[col] = pd.to_numeric(df[col], errors="coerce")
             df[col] = df[col].fillna(-1)
             df.loc[df[col] < 0, col] = -1
+    log_action(" ✔︎ Data validation completed")
     return df
 
 
@@ -163,6 +179,21 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
     Extend this function to add derived columns/features.
     """
     return df
+
+
+def save_cleaned_data(df: pd.DataFrame, output_path: str) -> None:
+    """
+    Save the cleaned DataFrame to a CSV file.
+    """
+    df.to_csv(output_path, index=False)
+    log_action(f" ✔︎ Cleaned data saved to {output_path}")
+
+
+# -----------------------------
+# Logging Utility
+def log_action(message, log_path="results/task-a/reports/pipeline_steps.log"):
+    with open(log_path, "a") as f:
+        f.write(f"{pd.Timestamp.now()}: {message}\n")
 
 
 if __name__ == "__main__":
