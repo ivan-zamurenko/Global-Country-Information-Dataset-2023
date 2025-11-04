@@ -107,7 +107,11 @@ def format_row_values(df: pd.DataFrame) -> pd.DataFrame:
     """
     for column in df.select_dtypes(include="object").columns:
         df[column] = df[column].str.replace(r"[$%,]", "", regex=True)
-    df = df.apply(pd.to_numeric)
+        # Try to convert to numeric, but keep as string if mostly non-numeric
+        converted = pd.to_numeric(df[column], errors="coerce")
+        # If at least 80% of the values are numeric, convert column
+        if converted.notna().sum() >= 0.8 * len(df):
+            df[column] = converted
     return df
 
 
