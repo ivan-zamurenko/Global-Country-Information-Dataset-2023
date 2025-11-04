@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from analysis.data_pipeline import DataPipeLine
+import analysis.data_pipeline
 
 """
 Global Country Information Dataset 2023 - Main Analysis Module
@@ -18,6 +18,9 @@ DATA_RAW = PROJECT_ROOT / "data" / "raw"
 DATA_CLEANED = PROJECT_ROOT / "data" / "cleaned"
 RESULTS_DIR = PROJECT_ROOT / "results"
 
+# Threshold for outlier detection based on quantiles
+QUANTILE_THRESHOLD = 0.95
+
 
 def main():
     """Main analysis entry point."""
@@ -26,11 +29,7 @@ def main():
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
     #! Task 1: Setup the data pipeline
-    pipeline = DataPipeLine(
-        input_path=DATA_RAW,
-        output_path=RESULTS_DIR,
-    )
-    pipeline.run()
+    analysis.data_pipeline.run_pipeline()
 
 
 if __name__ == "__main__":

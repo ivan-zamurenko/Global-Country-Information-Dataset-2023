@@ -16,6 +16,9 @@ clean-data:
 stats:
 	@python3 -c "import pandas as pd; df = pd.read_csv('data/raw/world-data-2023.csv'); print(f'Countries: {len(df)}, Features: {len(df.columns)}, Missing: {df.isnull().sum().sum()}')"
 
+test:
+	@python3 -m pytest tests/
+
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true

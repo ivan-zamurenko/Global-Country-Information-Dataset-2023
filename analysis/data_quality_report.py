@@ -1,23 +1,23 @@
 import pandas as pd
 from datetime import datetime
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
 
 class DataQualityReport:
-    """Class cleaning and reporting on data quality issues."""
+    """Assess data quality and visualize missing values."""
 
-    def __init__(self, input_path: str, output_path: str):
+    def __init__(self, input_path: str, output_path: str, plot_path: str):
         self.input_path = input_path
         self.output_path = output_path
+        self.plot_path = plot_path
         print(
-            f"✓ Data quality report initialized with \n•input: {self.input_path} \n•output: {self.output_path}"
+            f"✓ Data quality report initialized with \n•input: {self.input_path} \n•output: {self.output_path} \n•plots: {self.plot_path}"
         )
 
     def load_data(self):
-        """Load data into the report."""
+        """Load CSV data."""
 
         self.data = pd.read_csv(self.input_path)
         print(
@@ -25,7 +25,7 @@ class DataQualityReport:
         )
 
     def examine_structure(self):
-        """Examine dataset structure and report findings."""
+        """Write basic info and missing value stats to report."""
         self.df = self.data.copy()
 
         with open(self.output_path, "w") as f:
@@ -37,14 +37,14 @@ class DataQualityReport:
             f.write("Dataset: World country statistics for 196 nations\n")
             f.write("=" * 60 + "\n")
 
-            # ! Basic Facts
+            # Basic facts
             f.write("\n📊 BASIC DATASET INFO\n")
             f.write("-" * 30 + "\n")
             f.write(f"Countries: {self.df.shape[0]} records\n")
             f.write(f"Indicators: {self.df.shape[1]} features\n")
             f.write(f"Data points: {self.df.shape[0] * self.df.shape[1]} total\n")
 
-            # ! Health check
+            # Missing value stats
             missing_ptc = (
                 self.df.isnull().sum().sum() / (self.df.shape[0] * self.df.shape[1])
             ) * 100
@@ -58,11 +58,11 @@ class DataQualityReport:
             if missing_values.sum() == 0:
                 f.write("✅ No missing values detected.\n")
 
-            #! Visualize missing values
+            # Visualizations
             self.bar_plot_missing_values()
             self.heatmap_missing_values()
 
-            # ! Content scan
+            # Data types
             f.write("\n📋 CONTENT OVERVIEW\n")
             f.write("-" * 30 + "\n")
             f.write(
@@ -75,40 +75,15 @@ class DataQualityReport:
                 f"Date columns: {len(self.df.select_dtypes(include=['datetime']).columns)}\n"
             )
 
-            # ! Data Format Issues
-            f.write("\n🧹 DATA FORMAT ISSUES\n")
-            f.write("-" * 30 + "\n")
-            f.write(" Cleaning columns names to standard format...\n")
-            self.df.columns = (
-                self.df.columns.str.strip()
-                .str.lower()
-                .str.replace("%", "pct")
-                .str.replace(r"[ \n\(\)/\-]", "_", regex=True)
-                .str.replace(r"_+", "_", regex=True)
-                .str.rstrip("_")
-            )
-            f.write("✅ Columns cleaned. Now let's clean values...\n")
-            for col in self.df.columns:
-                if self.df[col].dtype == "object":
-                    if self.df[col].str.contains(r"[%$]", regex=True).any():
-                        f.write(f"  ❕ Cleaning format issues in column: {col}\n")
-                        self.df[col] = (
-                            self.df[col]
-                            .str.replace(r"[$,]", "", regex=True)
-                            .str.replace("%", "")
-                            .astype(float)
-                        )
-            f.write("✅ Data format cleaning completed.\n")
-
-            # ! Sample Data Preview
+            # Sample Data Preview
             f.write("\n🧾 SAMPLE DATA PREVIEW\n")
             f.write("-" * 30 + "\n")
             f.write("Key columns preview:\n")
-            key_cols = ["country", "abbreviation", "land_area_km2", "population"]
+            key_cols = ["Country", "Population", "GDP", "Life expectancy"]
             if all(col in self.df.columns for col in key_cols):
                 f.write(f"{self.df[key_cols].head(5)}\n")
 
-            # ! Recommendations
+            # Next steps
             f.write("\n💡 NEXT STEPS RECOMMENDATIONS\n")
             f.write("-" * 30 + "\n")
             f.write("1. 🧹 Clean data format issues (remove $, %, commas)\n")
@@ -117,7 +92,7 @@ class DataQualityReport:
             f.write("4. ✅ Validate data ranges and outliers\n")
 
     def create_summary_table(self):
-        """Create a summary table of data quality issues."""
+        """Save summary of missing values and types."""
         df = self.data.copy()
 
         # Create summary table
@@ -137,9 +112,8 @@ class DataQualityReport:
             str(self.output_path).replace(".txt", "_summary.csv"), index=False
         )
 
-    #! Missing values plotting could be added here in future iterations
     def bar_plot_missing_values(self):
-        """Plot missing values bar chart & heatmap."""
+        """Bar chart: present vs missing values."""
         missing_values_pct = self.df.isnull().sum() / len(self.df)
         present_values_pct = 1 - missing_values_pct
 
@@ -162,14 +136,14 @@ class DataQualityReport:
         plt.tight_layout()
 
         plt.savefig(
-            str(self.output_path).replace(".txt", "_missing_values_bar.png"),
+            self.plot_path + "missing_values_bar.png",
             bbox_inches="tight",
         )
 
         plt.show()
 
     def heatmap_missing_values(self):
-        """Plot missing values heatmap"""
+        """Heatmap: missing values per row/column."""
         plt.figure(figsize=(20, 12))
         sns.heatmap(
             self.df.isnull(),
@@ -186,14 +160,13 @@ class DataQualityReport:
         plt.ylabel("Rows (samples)", fontsize=12)
         plt.tight_layout()
         plt.savefig(
-            str(self.output_path).replace(".txt", "_missing_values_heatmap.png"),
+            self.plot_path + "missing_values_heatmap.png",
             bbox_inches="tight",
         )
         plt.show()
-        pass
 
     def run(self):
-        """Run the data quality report generation."""
+        """Run all steps for data quality report."""
         self.load_data()
         self.examine_structure()
         self.create_summary_table()
