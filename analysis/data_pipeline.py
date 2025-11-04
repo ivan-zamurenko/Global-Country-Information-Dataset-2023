@@ -99,12 +99,14 @@ def format_column_names(df: pd.DataFrame) -> pd.DataFrame:
       - Strip whitespace and lowercase
     """
     df.columns = (
-        df.columns.str.replace(r"[()\-/\$]", "_", regex=True)  # Replace symbols
-        .str.lstrip("_")  # Remove leading underscores
+        df.columns.str.replace("\n", "", regex=False)
+        .str.replace(r"[()\-/\$]", "_", regex=True)  # Replace symbols
         .str.replace("%", "pct")  # Replace percent sign
         .str.replace(" ", "_")  # Replace spaces
         .str.replace(r"_+", "_", regex=True)  # Collapse underscores
-        .str.strip()  # Strip whitespace
+        .str.lstrip("_")  # Remove leading underscores
+        .str.strip("_")  # Strip underscores
+        .str.strip()
         .str.lower()  # Lowercase
     )
     log_action(" ✔︎ Formatted column names")

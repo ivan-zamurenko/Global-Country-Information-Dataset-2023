@@ -16,3 +16,4 @@ dependencies:
   - geopandas
   - folium
   - pathlib
+  - pytest
