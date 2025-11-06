@@ -16,7 +16,7 @@ REPORT_PATH = (
 PLOT_PATH = "results/task-a/plots/"  # Directory for plots
 CLEANED_PATH = "data/cleaned/world_data_2023_cleaned.csv"  # Output for cleaned data
 
-QUANTILE_HIGH_THRESHOLD = 0.90  # Outlier threshold (upper quantile)
+QUANTILE_HIGH_THRESHOLD = 0.95  # Outlier threshold (upper quantile)
 QUANTILE_LOW_THRESHOLD = 0.05  # Outlier threshold (lower quantile)
 
 # Columns most critical for analysis and cleaning
