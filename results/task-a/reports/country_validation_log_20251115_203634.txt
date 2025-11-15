@@ -1,0 +1,38 @@
+❌ Vatican City                             was changed to ✅ Holy See (Vatican City State)
+❌ Republic of Ireland                      was changed to ✅ Ireland
+❌ Palestinian National Authority           was changed to ✅ Palestine
+☑️ Country name was changed from            The Bahamas                                                  vs Bahamas
+☑️ Country name was changed from            Bolivia                                                      vs Bolivia, Plurinational State of
+☑️ Country name was changed from            Brunei                                                       vs Brunei Darussalam
+☑️ Country name was changed from            Ivory Coast                                                  vs Côte d'Ivoire
+☑️ Country name was changed from            Cape Verde                                                   vs Cabo Verde
+✅ Country_code CG                          for Country Republic of the Congo was updated
+☑️ Country name was changed from            Czech Republic                                               vs Czechia
+☑️ Country name was changed from            Democratic Republic of the Congo                             vs Congo, The Democratic Republic of the
+✅ Country_code SZ                          for Country Eswatini was updated
+☑️ Country name was changed from            The Gambia                                                   vs Gambia
+✅ Country_code VA                          for Country Holy See (Vatican City State) was updated
+☑️ Country name was changed from            Iran                                                         vs Iran, Islamic Republic of
+✅ Country_code IE                          for Country Ireland was updated
+☑️ Country name was changed from            Laos                                                         vs Lao People's Democratic Republic
+☑️ Country name was changed from            Federated States of Micronesia                               vs Micronesia, Federated States of
+☑️ Country name was changed from            Moldova                                                      vs Moldova, Republic of
+✅ Country_code NA                          for Country Namibia was updated
+☑️ Country name was changed from            North Korea                                                  vs Korea, Democratic People's Republic of
+✅ Country_code MK                          for Country North Macedonia was updated
+✅ Country_code PS                          for Country Palestine was updated
+☑️ Country name was changed from            Russia                                                       vs Russian Federation
+☑️ Country name was changed from            S�����������                                                 vs Sao Tome and Principe
+☑️ Country name was changed from            South Korea                                                  vs Korea, Republic of
+☑️ Country name was changed from            Syria                                                        vs Syrian Arab Republic
+☑️ Country name was changed from            Tanzania                                                     vs Tanzania, United Republic of
+☑️ Country name was changed from            East Timor                                                   vs Timor-Leste
+☑️ Country name was changed from            Turkey                                                       vs Türkiye
+☑️ Country name was changed from            Venezuela                                                    vs Venezuela, Bolivarian Republic of
+☑️ Country name was changed from            Vietnam                                                      vs Viet Nam
+
+==================================================
+💡 Totally was replaced:
+ 👉 COUNTRIES UPDATED:            22
+ 👉 COUNTRY_CODE UPDATED:          7
+==================================================
