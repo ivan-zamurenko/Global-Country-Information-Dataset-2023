@@ -1,0 +1,61 @@
+region,level_1,country,gdp_per_capita,economic_flag,wealth_category
+Africa,154,Seychelles,17401.72151600512,normal_inflation,Top 5 Richest
+Africa,109,Mauritius,11203.540584699034,stable_prices,Top 5 Richest
+Africa,53,Equatorial Guinea,8131.92388785725,normal_inflation,Top 5 Richest
+Africa,22,Botswana,7817.1830832174355,normal_inflation,Top 5 Richest
+Africa,97,Libya,7683.750611291677,normal_inflation,Top 5 Richest
+Asia,156,Singapore,65233.28243929371,stable_prices,Top 5 Richest
+Asia,141,Qatar,64781.73319734314,deflation,Top 5 Richest
+Asia,82,Israel,43641.39773585323,stable_prices,Top 5 Richest
+Asia,184,United Arab Emirates,43103.32305835232,deflation,Top 5 Richest
+Asia,90,Kuwait,32031.980102603156,normal_inflation,Top 5 Richest
+Europe,100,Luxembourg,110172.37314087298,normal_inflation,Top 5 Richest
+Europe,169,Switzerland,81993.72714940654,stable_prices,Top 5 Richest
+Europe,81,Ireland,77629.9889911643,stable_prices,Top 5 Richest
+Europe,129,Norway,75419.6348687409,normal_inflation,Top 5 Richest
+Europe,76,Iceland,66944.82550863102,normal_inflation,Top 5 Richest
+North America,32,Canada,46940.59584210967,normal_inflation,Top 5 Richest
+North America,11,Bahamas,32933.48601475806,normal_inflation,Top 5 Richest
+North America,14,Barbados,18148.24492640014,normal_inflation,Top 5 Richest
+North America,5,Antigua and Barbuda,17790.309304145474,normal_inflation,Top 5 Richest
+North America,177,Trinidad and Tobago,17276.465447001483,normal_inflation,Top 5 Richest
+Oceania,8,Australia,54049.8288124881,normal_inflation,Top 5 Richest
+Oceania,123,New Zealand,42745.04555752943,normal_inflation,Top 5 Richest
+Oceania,58,Fiji,6220.046420428944,normal_inflation,Top 5 Richest
+Oceania,148,Samoa,4200.641052610787,normal_inflation,Top 5 Richest
+Oceania,189,Vanuatu,3058.065675832494,normal_inflation,Top 5 Richest
+South America,190,"Venezuela, Bolivarian Republic of",16915.49345340793,hyperinflation,Top 5 Richest
+South America,187,Uruguay,16190.126957183886,high_inflation,Top 5 Richest
+South America,35,Chile,14896.453866597354,normal_inflation,Top 5 Richest
+South America,6,Argentina,10006.148973606541,hyperinflation,Top 5 Richest
+South America,137,Peru,6977.695783568442,normal_inflation,Top 5 Richest
+Africa,27,Burundi,261.24747254691437,deflation,Top 5 Poorest
+Africa,160,Somalia,305.689070676793,hyperinflation,Top 5 Poorest
+Africa,54,Eritrea,326.0630992391604,hyperinflation,Top 5 Poorest
+Africa,102,Malawi,411.5523404231106,high_inflation,Top 5 Poorest
+Africa,166,Sudan,441.5056033837011,hyperinflation,Top 5 Poorest
+Asia,174,Timor-Leste,478.15437142857144,normal_inflation,Top 5 Poorest
+Asia,0,Afghanistan,502.11548691997746,normal_inflation,Top 5 Poorest
+Asia,171,Tajikistan,870.787589295504,high_inflation,Top 5 Poorest
+Asia,192,Yemen,922.9296417430922,high_inflation,Top 5 Poorest
+Asia,121,Nepal,1071.0507605550897,high_inflation,Top 5 Poorest
+Europe,183,Ukraine,3464.696002931611,high_inflation,Top 5 Poorest
+Europe,112,"Moldova, Republic of",4498.520850289186,normal_inflation,Top 5 Poorest
+Europe,1,Albania,5352.857411084262,normal_inflation,Top 5 Poorest
+Europe,128,North Macedonia,5564.713196345863,hyperinflation,Top 5 Poorest
+Europe,21,Bosnia and Herzegovina,6073.265202968797,stable_prices,Top 5 Poorest
+North America,72,Haiti,754.5879177599514,high_inflation,Top 5 Poorest
+North America,124,Nicaragua,1912.903745350624,high_inflation,Top 5 Poorest
+North America,74,Honduras,2574.912190670397,normal_inflation,Top 5 Poorest
+North America,52,El Salvador,4187.250031106896,stable_prices,Top 5 Poorest
+North America,68,Guatemala,4619.987097105244,normal_inflation,Top 5 Poorest
+Oceania,159,Solomon Islands,2127.5385079341854,normal_inflation,Top 5 Poorest
+Oceania,135,Papua New Guinea,2845.180185774812,normal_inflation,Top 5 Poorest
+Oceania,189,Vanuatu,3058.065675832494,normal_inflation,Top 5 Poorest
+Oceania,148,Samoa,4200.641052610787,normal_inflation,Top 5 Poorest
+Oceania,58,Fiji,6220.046420428944,normal_inflation,Top 5 Poorest
+South America,20,"Bolivia, Plurinational State of",3552.068762105775,normal_inflation,Top 5 Poorest
+South America,136,Paraguay,5414.799137954041,normal_inflation,Top 5 Poorest
+South America,71,Guyana,5468.356628928696,normal_inflation,Top 5 Poorest
+South America,50,Ecuador,6183.823824821733,stable_prices,Top 5 Poorest
+South America,37,Colombia,6432.387583390623,normal_inflation,Top 5 Poorest
